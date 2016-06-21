@@ -1,0 +1,79 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>[s]readfile</title>
+  <meta name="description" content="HTML5 blank">
+  <meta name="author" content="loy">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <style>
+    table {
+      border-collapse:collapse;
+      border-spacing: 0;
+    }
+    table td,table th {
+      border:1px solid #222;
+    }
+  </style>
+</head>
+
+<body>
+
+  <input type="file" name="file" id="file">
+  <div>
+  <table>
+  <tbody id="table"></tbody>
+  </table>
+  <span id="count"></span>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script>
+
+var everything=[];
+var table=$("#table");
+ document.getElementById('file').onchange = function(){
+
+  var file = this.files[0];
+
+  var reader = new FileReader();
+  reader.onload = function(progressEvent){
+    // Entire file
+    /*console.log(this.result);*/
+
+    // By lines
+    var lines = this.result.split('\n');
+    lines.sort();
+    var last="";
+    var uniqueid=0,count=0,x0=0,x1=0,x2=0,x3=0,x4=0;
+    
+    for(var line = 0; line < lines.length; line++){
+      var k=lines[line];
+      var num=k.lastIndexOf("_");
+      var x=[];
+      x[0]=k.slice(0,num);
+      x[1]=k.slice(num);
+      //var x=lines[line].split("_");
+      if (x[0]!=last) {
+        $(table).append("<tr></tr>");
+        uniqueid++;
+      } else if ($(table).find("tr:last-child").children().length>=4) $(table).append("<tr></tr>");
+      $(table).find("tr:last-child").append("<td>"+lines[line]+"</td>");
+      count++;
+      last=x[0];
+
+      /*console.log(lines[line]);*/
+    }
+    $("#count").html("image count:"+count);
+
+  };
+  reader.readAsText(file);
+};
+  </script>
+</body>
+</html>

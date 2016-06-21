@@ -1,0 +1,91 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>readfile</title>
+  <meta name="description" content="HTML5 blank">
+  <meta name="author" content="loy">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <style>
+    table {
+      border-collapse:collapse;
+      border-spacing: 0;
+    }
+    table td,table th {
+      border:1px solid #222;
+    }
+  </style>
+</head>
+
+<body>
+
+  <input type="file" name="file" id="file">
+  <div>
+  <table>
+  <thead><tr><th>icon</th><th>半身</th><th>立繪</th><th>覺醒</th><th>other</th></tr></thead>
+  <tbody id="table"></tbody>
+  </table>
+  <span id="count"></span>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script>
+
+var everything=[];
+var table=$("#table");
+ document.getElementById('file').onchange = function(){
+
+  var file = this.files[0];
+
+  var reader = new FileReader();
+  reader.onload = function(progressEvent){
+    // Entire file
+    /*console.log(this.result);*/
+
+    // By lines
+    var lines = this.result.split('\n');
+    lines.sort();
+    var last="";
+    var uniqueid=0,count=0,x0=0,x1=0,x2=0,x3=0,x4=0;
+    
+    for(var line = 0; line < lines.length; line++){
+      var x=lines[line].split("_");
+      if (x[1]!=last) {
+        $(table).append("<tr><td></td><td></td><td></td><td></td><td></td></tr>");
+        uniqueid++;
+      }
+      if (x[2].indexOf("0.png")>-1 ) {
+        $(table).find("tr:last-child").find("td:first-child").html(lines[line]);
+        x0++;
+      } else if (x[2].indexOf("1.png")>-1 ) {
+        $(table).find("tr:last-child").find("td:nth-child(2)").html(lines[line]);
+        x1++;
+      } else if (x[2].indexOf("2.png")>-1 ) {
+        $(table).find("tr:last-child").find("td:nth-child(3)").html(lines[line]);
+        x2++;
+      } else if (x[2].indexOf("3.png")>-1 ) {
+        $(table).find("tr:last-child").find("td:nth-child(4)").html(lines[line]);
+        x3++;
+      } else {
+        $(table).find("tr:last-child").find("td:last-child").append("<span> "+lines[line]+"</span>");
+        x4++;
+      }
+      count++;
+      last=x[1];
+
+      /*console.log(lines[line]);*/
+    }
+    $("#count").html("unique id:"+uniqueid+" image count:"+count+"<br/>"
+      +"_0(icon):"+x0+" _1(半身):"+x1+" _2(立繪):"+x2+" _3(覺醒):"+x3+" other:"+x4);
+
+  };
+  reader.readAsText(file);
+};
+  </script>
+</body>
+</html>
